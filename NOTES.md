@@ -40,3 +40,8 @@ that during desaturation orientation can be held within some precision.
 6. Precision of system output will be as high as possible with materials available.
 
 CAD:
+1. Need to add clamping to motor shaft.
+2. Need to add mounts for arduino, motor controllers, battery.
+3. Add balance adjustment
+4. Add reaction wheel mass
+5. Fasteners for motor mount need counter bore or counter sink
