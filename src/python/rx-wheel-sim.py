@@ -47,13 +47,13 @@ class StateHistory:
         self.state = np.zeros((2,1))
         self.time = np.zeros((1))
     
-    def append(self, t, s, desired):
+    def append(self, t, s):
         self.state = np.concatenate((self.state, s), axis=1)
         self.time = np.concatenate((self.time, t), axis=0)
 
 if __name__ == "__main__":
     pid = PID(0.01, -100, 100, 1, 0, 0.01, True)
-    pid2 = PID(0.01, -100, 100, 1,0,0.1,True)
+    pid2 = PID(0.01, -100, 100, 1, 10, 0.1, True)
     w = Wheel(pid)
     sat = Sat(w, pid2)
     N = 300
