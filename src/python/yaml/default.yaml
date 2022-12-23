@@ -1,0 +1,32 @@
+controller0:
+  dt: 0.01
+  type: 'pid'
+  gains:
+    kp:   0
+    ki:   0
+    kd:   0
+    kff:  0
+controller1:
+  dt: 0.01
+  type: 'pid'
+  gains:
+    kp:   0
+    ki:   0
+    kd:   0
+    kff:  0
+controller2:
+  dt: 0.01
+  type: 'cascade'
+  gains:
+    inner:
+      kp: 0
+      ki: 0
+      kd: 0
+    outer:
+      kp: 0
+      ki: 0
+      kd: 0
+imu:
+  accelLPF: 0
+  gyroLPF: 0
+

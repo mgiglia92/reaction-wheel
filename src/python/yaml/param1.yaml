@@ -1,0 +1,23 @@
+controller0:
+  pid:
+    kp:   1
+    ki:   0
+    kd:   0
+    kff:  0
+controller1:
+  pid:
+    kp:   1
+    ki:   0
+    kd:   0
+    kff:  0
+controller2:
+  cascade:
+    inner:
+      kp: 
+      ki: 
+      kd: 
+    outer:
+      kp:
+      ki:
+      kd:
+imu:
