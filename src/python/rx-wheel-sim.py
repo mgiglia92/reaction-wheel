@@ -27,7 +27,7 @@ class Wheel:
     
 class Sat:
     def __init__(self, wheel, ctrl: PID):
-        self.I = 2
+        self.I = 20
         self.state = np.array([0,0]).reshape((2,1))
         self.ctrl = ctrl
         self.wheel = wheel
@@ -40,7 +40,7 @@ class Sat:
         # Respect conservation of angular momentum
         self.state[1] = (self.wheel.Iwheel*self.wheel.state[1])/self.I
         # Project state 1 time step into future
-        self.state = self.state + np.array([self.state[1], self.wheel.last_torque])
+        self.state = self.state + np.array([self.state[1], self.wheel.last_torque])*self.ctrl.dt
 
 class StateHistory:
     def __init__(self):
@@ -52,8 +52,8 @@ class StateHistory:
         self.time = np.concatenate((self.time, t), axis=0)
 
 if __name__ == "__main__":
-    pid = PID(0.01, -100, 100, 1, 0, 0.01, True)
-    pid2 = PID(0.01, -100, 100, 1, 10, 0.1, True)
+    pid = PID(0.01, -9, 9, 10, 0, 0.01, True)
+    pid2 = PID(0.01, -100, 100, 1, 0, 0.1, True)
     w = Wheel(pid)
     sat = Sat(w, pid2)
     N = 300
@@ -75,5 +75,5 @@ if __name__ == "__main__":
     ax[0,1].set_ylabel('Wheel Theta (rad/sec)')
     ax[1,1].plot(hist.time, wheelhist.state[1,:])
     ax[1,1].set_ylabel('Wheel Omega (rad/sec)')
-    plt.show(block=False)
+    plt.show(block=True)
     print("N")
