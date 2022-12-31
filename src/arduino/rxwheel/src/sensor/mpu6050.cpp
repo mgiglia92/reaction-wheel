@@ -25,6 +25,12 @@ void MPU6050::begin(void)
 	wire->write(0x00);
 	wire->endTransmission();
 
+	// set LPF
+	wire->beginTransmission(i2c_addr);
+	wire->write(0x1a);
+	wire->write(0x03);
+	wire->endTransmission();
+
 	// set gryo sensitivty to +-250
 	wire->beginTransmission(i2c_addr);
 	wire->write(0x1b);

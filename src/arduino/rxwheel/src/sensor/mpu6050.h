@@ -19,7 +19,7 @@
 
 
 class MPU6050 {
-private:
+public:
 	int      i2c_addr = RCC_MPU6050_I2C_ADDR;
 	TwoWire *wire     = &Wire;
 
