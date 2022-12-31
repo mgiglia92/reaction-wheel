@@ -33,7 +33,7 @@ class ArduinoComms(Serial):
             self.commsProcess.start()
         except Exception as e:
             print(e)
-            print(f"Maybe {self.port}, is not valid")
+            print(f"or maybe {self.port}, is not valid")
     
     def startComms(self):
         while True:
@@ -41,7 +41,7 @@ class ArduinoComms(Serial):
                 pass
                 # Check if any any messages in output queue
                 if not self.outputBufferQueue.empty():
-                    self.write(self.outputBufferQueue.get())
+                    self.write(bytes(self.outputBufferQueue.get(), 'utf-8'))
                 # Check if any data available 
                 if self.in_waiting > 0:
                     msg = self.read_until(bytes(EOM, 'utf-8'))
@@ -87,7 +87,8 @@ class ArduinoComms(Serial):
         ax = data[1][1:]
         az = data[2][1:]
         wy = data[3][1:]
-        return (float(time), float(ax), float(az), float(wy))
+        power = data[4][1:]
+        return (float(time), float(ax), float(az), float(wy), float(power))
 
 """
 From Arduino:

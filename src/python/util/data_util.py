@@ -8,11 +8,13 @@ class DataFormat:
         self.ax = np.empty((1),dtype=np.float32)
         self.az = np.empty((1),dtype=np.float32)
         self.wy = np.empty((1),dtype=np.float32)
+        self.power = np.empty((1), dtype=np.float32)
         self.index=0
     def append(self, data):
         self.time = np.append(self.time, data[0])
         self.ax = np.append(self.ax, data[1])
         self.az = np.append(self.az, data[2])
         self.wy = np.append(self.wy, data[3])
+        self.power = np.append(self.power, data[4])
     def tocsv(self):
         pass
