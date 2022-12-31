@@ -20,7 +20,15 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.comms = ArduinoComms()
         self.loadYamlButton.clicked.connect(self.loadYaml)
         self.saveYamlButton.clicked.connect(self.saveYaml)
+        self.startCommsButton.clicked.connect(self.startComms)
+        self.stopCommsButton.clicked.connect(self.stopComms)
         self.timer = QTimer(self)
+
+    def startComms(self):
+        self.comms.sendMessage("$R1%")
+
+    def stopComms(self):
+        self.comms.sendMessage("$R0%")
 
     def yamlFileDialog(self):
         options = QFileDialog.Options()
@@ -37,11 +45,34 @@ class Ui_MainWindowFull(Ui_MainWindow):
             # Process all the data in the queue
             while not self.comms.dataQueue.empty():
                 self.comms.data.append(self.comms.processDataMessage(self.comms.dataQueue.get()))
-            # Clear graphs and plot the last 500 data points
+            #clear plots
             self.graphWidget.clear()
             self.graphWidget_2.clear()
-            self.graphWidget.plot(self.comms.data.ax[-500:-1])
-            self.graphWidget_2.plot(self.comms.data.wy[-500:-1])
+            # See which radio button is selected for graph 1
+            id1 = self.plotSelector1ButtonGroup.checkedId()
+            if id1 == -2:
+                self.graphWidget.plot(self.comms.data.ax[-500:-1])
+            elif id1 == -3:
+                self.graphWidget.plot(self.comms.data.az[-500:-1])
+            elif id1 == -4:
+                self.graphWidget.plot(self.comms.data.wy[-500:-1])
+            elif id1 == -5:
+                self.graphWidget.plot(self.comms.data.time[-500:-1])
+            elif id1 == -6:
+                self.graphWidget.plot(self.comms.data.power[-500:-1])            
+            # See which radio button is selected for graph 2
+            id2 = self.plotSelector2ButtonGroup.checkedId()
+            if id2 == -3:
+                self.graphWidget_2.plot(self.comms.data.ax[-500:-1])
+            elif id2 == -4:
+                self.graphWidget_2.plot(self.comms.data.az[-500:-1])
+            elif id2 == -6:
+                self.graphWidget_2.plot(self.comms.data.wy[-500:-1])
+            elif id2 == -2:
+                self.graphWidget_2.plot(self.comms.data.time[-500:-1])
+            elif id2 == -5:
+                self.graphWidget_2.plot(self.comms.data.power[-500:-1])
+            
         except:
             pass
         self.timer.start(100)
@@ -55,10 +86,10 @@ class Ui_MainWindowFull(Ui_MainWindow):
     def loadYaml(self):
         filename = self.loadYamlFileName.text()
         try:
-            file = open(filename)
+            file = open(self.yamlLocationLabel.text() + '/' + filename)
         except:
-            filename = os.getcwd() + '/src/python/yaml/' + filename
-            file = open(filename)
+            print("Invalid file")
+            return False
        
         params = yaml.load(file) #Get params yaml file
         buf = io.StringIO() #Get StringIO buffer
@@ -69,7 +100,7 @@ class Ui_MainWindowFull(Ui_MainWindow):
     
     def saveYaml(self):
         text = self.yamlEditor.toPlainText() # Get text for update yaml file
-        file = open(os.getcwd()+'/src/python/yaml/' + self.saveYamlFileName.text(), 'wb') # get the filename
+        file = open(self.yamlLocationLabel.text() + '/' + self.saveYamlFileName.text(), 'wb') # get the filename
         file.write(bytes(text, 'utf-8'))# Write to the file
         file.close()# Close the file 
         
