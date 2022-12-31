@@ -15,10 +15,10 @@ antiWindupEnabled: true
 };
 
 PID_control_config_t satconfig{
-  kp: 100,
-  ki: 0,
-  kd: 0,
-lowerLimit: -5,
+  kp: 0,
+  ki: 20,
+  kd: 0.00001,
+  lowerLimit: -5,
   upperLimit: 5,
   sigma: 0.1,
   ts: 0.01,
@@ -57,7 +57,7 @@ void setup()
   Filter_init(&f);
   Serial.begin(115200);
   imu.begin();
-    imu.calibrate();
+//    imu.calibrate();
   //Set deadband outputs of motor
   velcontrol.setDeadbands(-70, 70);
   attachInterrupt(digitalPinToInterrupt(2), doA, RISING);
@@ -74,7 +74,7 @@ void loop()
 
     //Do sat porition feedback control
     desired_motorvel = -1 * satcontrol.pid(0, wy*(2*PI/180.0));
-
+//    desired_motorvel = -1 * satcontrol.pid(3.14, theta);
     //Estimate motor angular velocity
     motorvel = diff.differentiate(count) / N;
 
@@ -84,7 +84,7 @@ void loop()
     //Print data
     Serial.print(motorvel);
     Serial.print(',');
-    Serial.print(wy);
+    Serial.print(theta);
     Serial.print(',');
     Serial.println(desired_motorvel);
 
@@ -119,7 +119,7 @@ double calculateAngle()
   
 //
 //  //Complementary filter
-  theta = 0.9 * theta + 0.1 * (thetaprev + wy*(2*PI/180.0) * dt);
+//  theta = 0.9 * theta + 0.1 * (thetaprev + wy*(2*PI/180.0) * dt);
 
   //Output
   return theta;
