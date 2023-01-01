@@ -19,3 +19,5 @@ GUI Development: 1-3pm
 GUI Development: 1-2pm
 Serial Comms Protocol in cpp: 2-4pm
 
+1/1/23:
+Data Collection and Initial Analysis: 3-5pm
