@@ -133,7 +133,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>E</string>
+       <string>count</string>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">plotSelector1ButtonGroup</string>
@@ -226,7 +226,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>E</string>
+       <string>Count</string>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">plotSelector2ButtonGroup</string>
@@ -972,7 +972,15 @@
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="plotSelector1ButtonGroup"/>
-  <buttongroup name="plotSelector2ButtonGroup"/>
+  <buttongroup name="plotSelector1ButtonGroup">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
+  <buttongroup name="plotSelector2ButtonGroup">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
  </buttongroups>
 </ui>

@@ -23,6 +23,20 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.startCommsButton.clicked.connect(self.startComms)
         self.stopCommsButton.clicked.connect(self.stopComms)
         self.timer = QTimer(self)
+        # Set graph Button IDs
+        self.plotSelector1ButtonGroup.setId(self.plotA, 1)
+        self.plotSelector1ButtonGroup.setId(self.plotB, 2)
+        self.plotSelector1ButtonGroup.setId(self.plotC, 3)
+        self.plotSelector1ButtonGroup.setId(self.plotD, 4)
+        self.plotSelector1ButtonGroup.setId(self.plotE, 5)
+        self.plotSelector2ButtonGroup.setId(self.plotA_2, 1)
+        self.plotSelector2ButtonGroup.setId(self.plotB_2, 2)
+        self.plotSelector2ButtonGroup.setId(self.plotC_2, 3)
+        self.plotSelector2ButtonGroup.setId(self.plotD_2, 4)
+        self.plotSelector2ButtonGroup.setId(self.plotE_2, 5)
+        self.plot1 = [False]*5
+        self.plot2 = [False]*5
+
 
     def startComms(self):
         self.comms.sendMessage("$R1%")
@@ -48,29 +62,33 @@ class Ui_MainWindowFull(Ui_MainWindow):
             #clear plots
             self.graphWidget.clear()
             self.graphWidget_2.clear()
-            # See which radio button is selected for graph 1
-            id1 = self.plotSelector1ButtonGroup.checkedId()
-            if id1 == -2:
+
+            # Check what to plot
+            for i,b in enumerate(self.plotSelector1ButtonGroup.buttons()):
+                self.plot1[i] = b.isChecked()
+            for i,b in enumerate(self.plotSelector2ButtonGroup.buttons()):
+                self.plot2[i] = b.isChecked()
+
+            if self.plot1[0]:
                 self.graphWidget.plot(self.comms.data.ax[-500:-1])
-            elif id1 == -3:
+            if self.plot1[1]:
                 self.graphWidget.plot(self.comms.data.az[-500:-1])
-            elif id1 == -4:
+            if self.plot1[2]:
                 self.graphWidget.plot(self.comms.data.wy[-500:-1])
-            elif id1 == -5:
+            if self.plot1[3]:
                 self.graphWidget.plot(self.comms.data.time[-500:-1])
-            elif id1 == -6:
+            if self.plot1[4]:
                 self.graphWidget.plot(self.comms.data.power[-500:-1])            
-            # See which radio button is selected for graph 2
-            id2 = self.plotSelector2ButtonGroup.checkedId()
-            if id2 == -3:
+
+            if self.plot2[0]:
                 self.graphWidget_2.plot(self.comms.data.ax[-500:-1])
-            elif id2 == -4:
-                self.graphWidget_2.plot(self.comms.data.az[-500:-1])
-            elif id2 == -6:
-                self.graphWidget_2.plot(self.comms.data.wy[-500:-1])
-            elif id2 == -2:
-                self.graphWidget_2.plot(self.comms.data.time[-500:-1])
-            elif id2 == -5:
+            if self.plot2[1]:
+              self.graphWidget_2.plot(self.comms.data.az[-500:-1])
+            if self.plot2[2]:
+              self.graphWidget_2.plot(self.comms.data.wy[-500:-1])
+            if self.plot2[3]:
+              self.graphWidget_2.plot(self.comms.data.time[-500:-1])
+            if self.plot2[4]:
                 self.graphWidget_2.plot(self.comms.data.power[-500:-1])
             
         except:
