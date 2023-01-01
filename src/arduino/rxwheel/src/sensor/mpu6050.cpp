@@ -14,7 +14,7 @@
 
 
 #define ACCEL_SENSITIVITY 16384.0
-#define GYRO_SENSITIVITY  131.0
+#define GYRO_SENSITIVITY  16.4 //131.0
 
 
 void MPU6050::begin(void)
@@ -31,10 +31,10 @@ void MPU6050::begin(void)
 	wire->write(0x03);
 	wire->endTransmission();
 
-	// set gryo sensitivty to +-250
+	// set gryo sensitivty to +/- 1000
 	wire->beginTransmission(i2c_addr);
 	wire->write(0x1b);
-	wire->write(0x00);
+	wire->write(0b00010000);
 	wire->endTransmission();
 
 	// set acceleration sensitivity to +-2g
@@ -89,9 +89,9 @@ void MPU6050::calibrate(void)
 	// NOTE: ax_bias will be incorrect since we're removing the
 	// gravity components and assuming calibration on a level
 	// surface
-	ax_bias = ax_sum / 100;
-	ay_bias = ay_sum / 100;
-	az_bias = az_sum / 100;
+	// ax_bias = ax_sum / 100;
+	// ay_bias = ay_sum / 100;
+	// az_bias = az_sum / 100;
 	wx_bias = wx_sum / 100;
 	wy_bias = wy_sum / 100;
 	wz_bias = wz_sum / 100;

@@ -9,12 +9,15 @@ unsigned long dt = 10000;
 int counter = 0;
 bool flip = false;
 int power=0;
+int count=0;
 
 void setup() {
   Serial.begin(115200);
   // put your setup code here, to run once:
   imu.begin();
+  imu.calibrate();
   motorSetup();
+  attachInterrupt(digitalPinToInterrupt(2), doA, RISING);
 }
 
 void loop() {
@@ -29,7 +32,7 @@ void loop() {
     }
     else{ power = 0; }
 
-    comms.sendData((cur - prev) / 1000000.0, imu.getAccelX(), imu.getAccelZ(), imu.getAngVelY(), power);
+    comms.sendData((cur - prev) / 1000000.0, imu.getAccelX(), imu.getAccelZ(), imu.getAngVelY(), count);
     prev = cur;
   }
 
@@ -42,5 +45,16 @@ void loop() {
     updateIMU(&comms, &imu);
     updateControllers(&comms, &c0, &c1, &c2, &c3, &c4);
     comms.updateParams = false;
+  }
+}
+
+void doA()
+{
+  int B = digitalRead(3);
+  if (B == HIGH) {
+    count++;
+  }
+  else {
+    count--;
   }
 }
