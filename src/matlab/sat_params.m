@@ -1,7 +1,5 @@
-Imot = 0.15
-Iwheel = 5.35
-Isat = 2.5
-N = 51 % Motor/Wheel ratio
-Km = 2
-tau = 0.15
+Iwheel = 0.0007208 %kg m2
+Isat = 0.0001869 % kg m2
+Km = 29.58
+tau = 0.1
 Vmax = 12
