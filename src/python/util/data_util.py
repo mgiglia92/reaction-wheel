@@ -4,11 +4,11 @@ import csv
 class DataFormat:
     def __init__(self):
         pass
-        self.time = np.empty((1),dtype=np.float32)
-        self.ax = np.empty((1),dtype=np.float32)
-        self.az = np.empty((1),dtype=np.float32)
-        self.wy = np.empty((1),dtype=np.float32)
-        self.power = np.empty((1), dtype=np.float32)
+        self.time = np.empty((0),dtype=np.float32)
+        self.ax = np.empty((0),dtype=np.float32)
+        self.az = np.empty((0),dtype=np.float32)
+        self.wy = np.empty((0),dtype=np.float32)
+        self.power = np.empty((0), dtype=np.float32)
         self.index=0
     def append(self, data):
         self.time = np.append(self.time, data[0])

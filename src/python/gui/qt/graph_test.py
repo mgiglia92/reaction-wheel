@@ -11,6 +11,7 @@ yaml = YAML()
 from threading import Thread
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QFileDialog
+from util.data_util import DataFormat
 
 class Ui_MainWindowFull(Ui_MainWindow):
     def setup(self):
@@ -22,6 +23,7 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.saveYamlButton.clicked.connect(self.saveYaml)
         self.startCommsButton.clicked.connect(self.startComms)
         self.stopCommsButton.clicked.connect(self.stopComms)
+        self.clearDataButton.clicked.connect(self.clearData)
         self.timer = QTimer(self)
         # Set graph Button IDs
         self.plotSelector1ButtonGroup.setId(self.plotA, 1)
@@ -37,6 +39,8 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.plot1 = [False]*5
         self.plot2 = [False]*5
 
+    def clearData(self):
+        self.comms.data = DataFormat()
 
     def startComms(self):
         self.comms.sendMessage("$R1%")
@@ -63,6 +67,11 @@ class Ui_MainWindowFull(Ui_MainWindow):
             self.graphWidget.clear()
             self.graphWidget_2.clear()
 
+            maxpoints = self.numDataPointsSpinBox.value()
+            startpoint = self.startDataPointSpinBox.value()
+            length = len(self.comms.data.ax)
+            numpoints = min(maxpoints, length-startpoint)
+
             # Check what to plot
             for i,b in enumerate(self.plotSelector1ButtonGroup.buttons()):
                 self.plot1[i] = b.isChecked()
@@ -70,26 +79,26 @@ class Ui_MainWindowFull(Ui_MainWindow):
                 self.plot2[i] = b.isChecked()
 
             if self.plot1[0]:
-                self.graphWidget.plot(self.comms.data.ax[-500:-1])
+                self.graphWidget.plot(self.comms.data.ax[-1*numpoints:-1])
             if self.plot1[1]:
-                self.graphWidget.plot(self.comms.data.az[-500:-1])
+                self.graphWidget.plot(self.comms.data.az[-1*numpoints:-1])
             if self.plot1[2]:
-                self.graphWidget.plot(self.comms.data.wy[-500:-1])
+                self.graphWidget.plot(self.comms.data.wy[-1*numpoints:-1])
             if self.plot1[3]:
-                self.graphWidget.plot(self.comms.data.time[-500:-1])
+                self.graphWidget.plot(self.comms.data.time[-1*numpoints:-1])
             if self.plot1[4]:
-                self.graphWidget.plot(self.comms.data.power[-500:-1])            
+                self.graphWidget.plot(self.comms.data.power[-1*numpoints:-1])            
 
             if self.plot2[0]:
-                self.graphWidget_2.plot(self.comms.data.ax[-500:-1])
+                self.graphWidget_2.plot(self.comms.data.ax[-1*numpoints:-1])
             if self.plot2[1]:
-              self.graphWidget_2.plot(self.comms.data.az[-500:-1])
+              self.graphWidget_2.plot(self.comms.data.az[-1*numpoints:-1])
             if self.plot2[2]:
-              self.graphWidget_2.plot(self.comms.data.wy[-500:-1])
+              self.graphWidget_2.plot(self.comms.data.wy[-1*numpoints:-1])
             if self.plot2[3]:
-              self.graphWidget_2.plot(self.comms.data.time[-500:-1])
+              self.graphWidget_2.plot(self.comms.data.time[-1*numpoints:-1])
             if self.plot2[4]:
-                self.graphWidget_2.plot(self.comms.data.power[-500:-1])
+                self.graphWidget_2.plot(self.comms.data.power[-1*numpoints:-1])
             
         except:
             pass
