@@ -45,3 +45,10 @@ CAD:
 3. Add balance adjustment
 4. Add reaction wheel mass
 5. Fasteners for motor mount need counter bore or counter sink
+
+
+Data Collection Notes:
+1. Prop pwm=60 for inertia tests, 12V on supply. Prop sees ~2.82V
+	This maps to ~5.58g of thrust, applied at a radius of 68mm
+	Force Applied is ~0.0547 N
+	Torque applied would be ~0.00372 Nm
