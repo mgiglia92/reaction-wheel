@@ -21,3 +21,10 @@ Serial Comms Protocol in cpp: 2-4pm
 
 1/1/23:
 Data Collection and Initial Analysis: 3-5pm
+
+1/3/23:
+Inertia Estimate data collection: 1-2pm
+Inertia Ratio data analysis: 2-3pm
+Friction estimation: 3-4pm
+System analysis with friction removal: 4-5pm
+Matlab model edits, PID tuning: 5-6pm
