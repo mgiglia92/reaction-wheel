@@ -22,6 +22,7 @@ class ArduinoComms(Serial):
         self.commsProcess = Thread(target=self.startComms)
         self.messageBuffer = Queue(maxsize=1000)
         self.data = DataFormat()
+        self.killProcess = False
 
     def connect(self, port=None):
         try:
@@ -38,7 +39,7 @@ class ArduinoComms(Serial):
     def startComms(self):
         while True:
             try:
-                pass
+                if self.killProcess: break
                 # Check if any any messages in output queue
                 if not self.outputBufferQueue.empty():
                     self.write(bytes(self.outputBufferQueue.get(), 'utf-8'))
