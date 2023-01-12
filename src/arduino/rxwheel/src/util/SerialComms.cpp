@@ -9,7 +9,8 @@ SerialComms::SerialComms(){
     //Variable that get used externally, set via the command protocol
     setpoint = 0;
     mode = 0;
-    start=false;
+    startTest=false;
+    runController=false;
     activate = false;
     calibration_start = false;
     LPF=0;
@@ -33,12 +34,19 @@ void SerialComms::processCommand(char* cmd_string){
     cmd = parseNumberInt(cmd_string, 'R', -1);
     switch((int)(cmd)){
         case 0: //Deactivate control and comms
-            start = false;
+            startTest = false;
+            runController = false;
             writeData=false;
             break;
-        case 1: //Activate control and Comms
-            start = true;
+        case 1: //Activate test
+            startTest = true;
+            runController = false;
             writeData=true;
+            break;
+        case 2: //Activate feedback control
+            runController = true;
+            startTest = false;
+            writeData =true;
             break;
 
         //If no matches, break
@@ -60,17 +68,36 @@ void SerialComms::processCommand(char* cmd_string){
     //Set controller gains and other parameters
     cmd = parseNumberInt(cmd_string, 'K', -1);
     switch((int)(cmd)){
-        case 0:
-            double p = parseNumberDouble(cmd_string, 'P', 0);
-            double i = parseNumberDouble(cmd_string, 'I', 0);
-            double d = parseNumberDouble(cmd_string, 'D', 0);
-            double f = parseNumberDouble(cmd_string, 'F', 0);
-            config0.kp = p;
-            config0.ki = i;
-            config0.kd = d;
-            updateParams = true;
-            break;
+        double p;
+        double i;
+        double d;
+        double f;
+        double t;
+        double b;
+        double l;
+        double u;
+        double e;
 
+        case 0:
+            getControllerVals(cmd_string, &config0);
+            updateParams=true;
+            break;
+        case 1:
+            getControllerVals(cmd_string, &config1);
+            updateParams=true;
+            break;
+        case 2:
+            getControllerVals(cmd_string, &config2);
+            updateParams=true;
+            break;
+        case 3:
+            getControllerVals(cmd_string, &config3);
+            updateParams=true;
+            break;
+        case 4:
+            getControllerVals(cmd_string, &config4);
+            updateParams=true;
+            break;
         default: break;
     }
 
@@ -188,4 +215,25 @@ void SerialComms::sendData(double a, double b, double c, double d, double e) {
         Serial.print('%'); //End of message character
         // Serial.println('\0');
     }
+}
+
+void SerialComms::getControllerVals(char* cmd_string, PID_control_config_t* config)
+{       
+    double p = parseNumberDouble(cmd_string, 'P', 0);
+    double i = parseNumberDouble(cmd_string, 'I', 0);
+    double d = parseNumberDouble(cmd_string, 'D', 0);
+    double f = parseNumberDouble(cmd_string, 'F', 0);
+    double t = parseNumberDouble(cmd_string, 'T', 0.01);
+    double b = parseNumberDouble(cmd_string, 'B', 0.1);
+    double l = parseNumberDouble(cmd_string, 'L', 0);
+    double u = parseNumberDouble(cmd_string, 'U', 0);
+    double e = parseNumberDouble(cmd_string, 'E', 0);
+    config->kp = p;
+    config->ki = i;
+    config->kd = d;
+    config->ts = t;
+    config->sigma = b;
+    config->lowerLimit = l;
+    config->upperLimit = u;
+
 }

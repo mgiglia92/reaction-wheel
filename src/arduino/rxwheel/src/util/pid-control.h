@@ -24,6 +24,7 @@ typedef struct PID_control_config_s {
 	float ts;
 	bool  errorDotEnabled;
 	bool  antiWindupEnabled;
+	float deadband_radius;
 } PID_control_config_t;
 
 
@@ -64,6 +65,7 @@ public:
 	void setGains(float kp, float ki, float kd);
 	void setTimeParameters(float ts, float sigma);
 	void setpointReset(float y_r, float y);
+	void setLimits(float lower, float upper);
 };
 
 

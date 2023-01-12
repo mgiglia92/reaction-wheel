@@ -9,7 +9,7 @@
 #include "differentiator.h"
 
 
-Differentiator::Differentiator(float sigma, float ts)
+Differentiator::Differentiator(float ts, float sigma)
 {
 	this->sigma = sigma;
 	this->ts    = ts;

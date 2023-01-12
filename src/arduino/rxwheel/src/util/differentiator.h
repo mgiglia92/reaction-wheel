@@ -20,7 +20,7 @@ private:
 	float y_d1  = 0.0;
 
 public:
-	Differentiator(float sigma, float ts);
+	Differentiator(float ts, float sigma);
 
 	float differentiate(float y);
 	void reset(float degrees);

@@ -171,3 +171,9 @@ void PID_control::setpointReset(float y_r, float y)
 	error_d1   = y_r - y;
 	error_dot  = 0.0;
 }
+
+void PID_control::setLimits(float l, float u)
+{
+	lowerLimit = l;
+	upperLimit = u;
+}

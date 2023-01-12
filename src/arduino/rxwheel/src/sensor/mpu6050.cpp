@@ -14,7 +14,7 @@
 
 
 #define ACCEL_SENSITIVITY 16384.0
-#define GYRO_SENSITIVITY  16.4 //131.0
+#define GYRO_SENSITIVITY  16.4//32.8 //131.0
 
 
 void MPU6050::begin(void)
@@ -34,7 +34,7 @@ void MPU6050::begin(void)
 	// set gryo sensitivty to +/- 1000
 	wire->beginTransmission(i2c_addr);
 	wire->write(0x1b);
-	wire->write(0b00010000);
+	wire->write(0b00011000);
 	wire->endTransmission();
 
 	// set acceleration sensitivity to +-2g

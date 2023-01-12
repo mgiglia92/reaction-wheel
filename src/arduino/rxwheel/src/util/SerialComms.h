@@ -9,6 +9,8 @@ public:
     //Search cmd for letter, return number immideately after letter
     long parseNumberInt(char*, char, int);
     double parseNumberDouble(char*, char, int);
+    //Get controller values from string 
+    void getControllerVals(char*, PID_control_config_t*);
     // SerialComms(int*, double*, pwmAngle, pwmVelocity, time);
     SerialComms();
 
@@ -27,7 +29,8 @@ public:
     int labType;
     double setpoint;
     int mode;
-    bool start;
+    bool startTest;
+    bool runController;
     bool activate; // Activate/deactivate controllers and comms
     PID_control_config_t config0;
     PID_control_config_t config1;
@@ -57,7 +60,8 @@ Serial Comms "G-code" style lookup:
 E0 : SOFTWARE E-STOP
 
 R0 : Deactivate controllers and comms
-R1 : Activate controllers and comms
+R1 : Activate test and comms (deactivate controller)
+R2 : Activate controller and comms (deactivate test)
 
 Make sure YAML file controller types are same as firmware expected controller types
 (0: PID, 1: cascade, 2: PID w/ feedforward)
@@ -73,8 +77,10 @@ M1,A#(int) : Set IMU Parameters lowpass filter settings
 
 
 Set Gains: PID gains and Feed forward gains (F)
+P: proportiona, I: Integral, D: derivative, F: feedforward, T: sample time, B: Derivative cutoff freq
+L: Lower output limit, U: upper output limit, E: deadband radius
 All # are doubles here!
-K0,P#,I#,D#,F# : Set Gains of Controller0
+K0,P#,I#,D#,F#,T#,B#,L#,U#,E# : Set Gains of Controller0
 K1,P#,I#,D#,F# : Set Gains of Controller1
 K2,P#,I#,D#,F# : Set Gains of Controller2
 K3,P#,I#,D#,F# : Set Gains of Controller3
