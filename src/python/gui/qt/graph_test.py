@@ -12,18 +12,22 @@ from threading import Thread
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QFileDialog
 from util.data_util import DataFormat
+from util.parameters_util import ParameterConverter
 
 class Ui_MainWindowFull(Ui_MainWindow):
     def setup(self):
         self.connectButton.clicked.connect(lambda: self.arduinoConnect(self.deviceName.text()))
+        self.disconnectButton.clicked.connect(self.arduinoDisconnect)
         self.yamlFileLocationButton.clicked.connect(self.yamlFileDialog)
         self.dataFileLocationButton.clicked.connect(self.dataFileDialog)
         self.comms = ArduinoComms()
         self.loadYamlButton.clicked.connect(self.loadYaml)
         self.saveYamlButton.clicked.connect(self.saveYaml)
         self.startCommsButton.clicked.connect(self.startComms)
+        self.startControllerButton.clicked.connect(self.startController)
         self.stopCommsButton.clicked.connect(self.stopComms)
         self.clearDataButton.clicked.connect(self.clearData)
+        self.pushParamsButton.clicked.connect(self.pushParams)    
         self.timer = QTimer(self)
         # Set graph Button IDs
         self.plotSelector1ButtonGroup.setId(self.plotA, 1)
@@ -44,6 +48,9 @@ class Ui_MainWindowFull(Ui_MainWindow):
 
     def startComms(self):
         self.comms.sendMessage("$R1%")
+
+    def startController(self):
+        self.comms.sendMessage("$R2%")
 
     def stopComms(self):
         self.comms.sendMessage("$R0%")
@@ -109,7 +116,16 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.comms.connect(port)
         self.timer.timeout.connect(self.plotfunc)
         self.timer.start(100)
-    
+
+    def arduinoDisconnect(self):
+        print('trying to disconnect')
+        try:
+            self.comms.close()
+            self.comms.killProcess = True
+            print("sucessfully disconnected")
+        except Exception as e:
+            print(e)
+
     def loadYaml(self):
         filename = self.loadYamlFileName.text()
         try:
@@ -130,6 +146,9 @@ class Ui_MainWindowFull(Ui_MainWindow):
         file = open(self.yamlLocationLabel.text() + '/' + self.saveYamlFileName.text(), 'wb') # get the filename
         file.write(bytes(text, 'utf-8'))# Write to the file
         file.close()# Close the file 
+
+    def pushParams(self):
+        p = ParameterConverter(self.yamlLocationLabel.text() + '/' +self.loadYamlFileName.text())
         
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindowFull):
 
