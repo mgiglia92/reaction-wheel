@@ -2,6 +2,8 @@ from threading import Thread
 from queue import Queue
 from serial import EIGHTBITS, PARITY_NONE, STOPBITS_ONE, Serial
 from util.data_util import DataFormat
+import traceback
+import platform
 
 BOM = '$' # Beginning of message character
 EOM = '%' # End of message character
@@ -11,25 +13,27 @@ class ArduinoComms(Serial):
     def __init__(self, port=None, baudrate=115200, \
                 bytesize=EIGHTBITS, parity=PARITY_NONE, \
                 stopbits=STOPBITS_ONE, timeout=10):
-
-        super(Serial, self).__init__(port=port, baudrate=baudrate, bytesize=bytesize, \
-                                parity=parity, stopbits=stopbits, timeout=timeout)
-        
-        self.dataQueue = Queue(maxsize=1000) # Queue of Data from arduino
-        self.outQueue = Queue(maxsize=100) # Queue of messages waiting for response
-        self.outputBufferQueue = Queue(maxsize=100) # Queueof output messages to arduino
-        self.responseQueue = Queue(maxsize=100) # Queue of responses from arduino based on output messages
-        self.commsProcess = Thread(target=self.startComms)
-        self.messageBuffer = Queue(maxsize=1000)
-        self.data = DataFormat()
-        self.killProcess = False
+        try:
+            super(Serial, self).__init__(port=port, baudrate=baudrate, bytesize=bytesize, \
+                                    parity=parity, stopbits=stopbits, timeout=timeout)
+            
+            self.dataQueue = Queue(maxsize=1000) # Queue of Data from arduino
+            self.outQueue = Queue(maxsize=100) # Queue of messages waiting for response
+            self.outputBufferQueue = Queue(maxsize=100) # Queueof output messages to arduino
+            self.responseQueue = Queue(maxsize=100) # Queue of responses from arduino based on output messages
+            self.commsProcess = Thread(target=self.startComms)
+            self.messageBuffer = Queue(maxsize=1000)
+            self.data = DataFormat()
+            self.killProcess = False
+        except:
+            traceback.print_exception()
 
     def connect(self, port=None):
         try:
             self.port = port
             self.open()
             if(self.isOpen()): print("Succesfully Connected!")
-            self.set_buffer_size(rx_size = 12800, tx_size = 12800)
+            if(platform.system() == "Windows"): self.set_buffer_size(rx_size = 12800, tx_size = 12800)
             self.flush()
             self.commsProcess.start()
         except Exception as e:
