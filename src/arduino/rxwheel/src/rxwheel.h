@@ -12,6 +12,7 @@
 #include "util/pid-control.h"
 #include "util/SerialComms.h"
 #include "util/parameter-update.h"
+#include "util/structures.h"
 
 
 #endif /* RXWHEEL_H */

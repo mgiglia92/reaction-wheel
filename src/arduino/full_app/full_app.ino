@@ -7,6 +7,7 @@ float Iwheel = 0.0019098;
 float Isat = 0.00042853;
 
 SerialComms comms;
+CmdVals_t cmdVals{0, 0, 0, 0, 0};
 MPU6050 imu;
 PID_control c0, c1, c2, c3, c4;
 Differentiator wheeldiff(0.01, 1 / (omegaBandwidth * 2 * PI));
@@ -43,7 +44,7 @@ void setup() {
   c1.setTimeParameters(0.01, 1 / (controllerbandwidth * 2 * PI));
   c1.setLimits(-15, 15);
   c1.antiWindupEnabled = true;
-//  c1.setDeadbands(-3.6, 3.6);
+  //  c1.setDeadbands(-3.6, 3.6);
   //Sat Theta controller (outer loop)
   c2.setGains(10, 0, 0);
   c2.setTimeParameters(0.01, 1 / (controllerbandwidth * 2 * PI));
@@ -54,7 +55,7 @@ void setup() {
   c3.setTimeParameters(0.01, 1 / (controllerbandwidth * 2 * PI));
   c3.setLimits(-12, 12);
   c3.antiWindupEnabled = true;
-  c3.setDeadbands(-2,2);
+  c3.setDeadbands(-2, 2);
 }
 
 void loop() {
@@ -63,12 +64,12 @@ void loop() {
   comms.handleCommand();
   if (cur - prev > dt) {
     imu.update();
-    if (comms.startTest && !comms.runController)
+    if (cmdVals.startTest && !cmdVals.runController)
     {
       power = 12;
     }
     //Run feedback control
-    else if(comms.runController && !comms.startTest)
+    else if (cmdVals.runController && !cmdVals.startTest)
     {
       wSat = imu.getAngVelY() * PI / 180;
       //Estimate motor velocity (in sat frame, rad/sec)
@@ -78,41 +79,47 @@ void loop() {
       thetaSat = thetaSat + wSat * (dt / 1000000.0); // Integrate wSat to get theta (approximate
 
       // Outer loop of sat (sat theta)
-      wSatDesired = c2.pid(3.14, thetaSat);
-//        wSatDesired = 1.5;
+      wSatDesired = c2.pid(cmdVals.thetaSetpoint, thetaSat);
+      //        wSatDesired = 1.5;
 
       //Inner Loop of Sat (sat ang vel)
       torqueDesired = c1.pid(wSatDesired, wSat);
       wwheelDesired = (wwheelActual + (torqueDesired / Iwheel));
       wwheelDesired = constrain(wwheelDesired, -29, 29);
-//            wwheelDesired = 6.28;
+      //            wwheelDesired = 6.28;
 
       //Motor Velocity feedback control (using c0)
-            power = c0.pid(wwheelDesired, wwheelActual);
+      power = c0.pid(wwheelDesired, wwheelActual);
       //Motor Acceleration control
-//      power = c3.pid(0.5, awheel);
+      //      power = c3.pid(0.5, awheel);
       //Thruster ON/OFF control
-      if(wwheelActual > 13){ thrusterPower = 3; }
-      else if(wwheelActual < 5 && wwheelActual>-5){ thrusterPower = 0; }
-      else if(wwheelActual < -13 && wwheelActual<0){ thrusterPower = -3; }
+      if (wwheelActual > 13) {
+        thrusterPower = 3;
+      }
+      else if (wwheelActual < 5 && wwheelActual > -5) {
+        thrusterPower = 0;
+      }
+      else if (wwheelActual < -13 && wwheelActual < 0) {
+        thrusterPower = -3;
+      }
     }
     else {
       power = 0;
-      thrusterPower=0;
+      thrusterPower = 0;
       //Reset the controllers
       c0.setpointReset(0, 0);
       c1.setpointReset(0, 0);
     }
 
-    //    comms.sendData((cur - prev) / 1000000.0, imu.getAccelX(), imu.getAccelZ(), imu.getAngVelY(), count);
-    comms.sendData((cur - prev) / 1000000.0, thetaSat, wSatDesired, wSat, power);
+            comms.sendData((cur - prev) / 1000000.0, cmdVals.thetaSetpoint, thetaSat, imu.getAngVelY(), count);
+//    comms.sendData((cur - prev) / 1000000.0, cmdVals.thetaSetpoint, cmdVals.runController, cmdVals.startTest, cmdVals.thetaDotSetpoint);
 
     prev = cur;
   }
 
   //Write motor power and direction (convert from voltage to pwm)
   pwm = int(-1 * power * 255 / 12.0);
-  thrusterPwm = int(thrusterPower*255/12);
+  thrusterPwm = int(thrusterPower * 255 / 12);
   rawMotorCtrl(thrusterPwm, constrain(pwm, -255, 255));
 
   //Write prop power
@@ -122,8 +129,13 @@ void loop() {
   if (comms.updateParams)
   {
     updateIMU(&comms, &imu);
-    updateControllers(&comms, &c0, &c1, &c2, &c3, &c4);
+    updateValues(&comms, &cmdVals);
     comms.updateParams = false;
+  }
+  if (comms.updateController)
+  {
+    updateControllers(&comms, &c0, &c1, &c2, &c3, &c4);
+
   }
 }
 

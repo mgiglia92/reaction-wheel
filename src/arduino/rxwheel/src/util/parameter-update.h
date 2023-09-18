@@ -1,17 +1,6 @@
-#ifndef RXWHEEL_H
-#define RXWHEEL_H
+#ifndef RXWHEEL_PARAMETER_UPDATE_H
+#define RXWHEEL_PARAMETER_UPDATE_H
 
-
-#include "sensor/mpu6050.h"
-#include "sensor/odom.h"
-#include "util/array.h"
-#include "util/differentiator.h"
-#include "util/pid-control.h"
-#include "util/SerialComms.h"
-#include "util/parameter-update.h"
-
-
-#endif /* RXWHEEL_H */
 
 void updateIMU(SerialComms *comms, MPU6050 *imu)
 {
@@ -55,3 +44,13 @@ void updateControllers(SerialComms *comms, PID_control *c0, PID_control *c1, PID
     c4->setDeadbands(comms->config4.deadband_radius*-1, comms->config4.deadband_radius);
 
 }
+
+void updateValues(SerialComms *comms, CmdVals_t *vals)
+{
+    vals->thetaSetpoint = comms->cmdVals.thetaSetpoint;
+    vals->thetaDotSetpoint = comms->cmdVals.thetaDotSetpoint;
+    vals->startTest = comms->cmdVals.startTest;
+    vals->runController = comms->cmdVals.runController;
+}
+
+#endif

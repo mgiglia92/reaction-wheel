@@ -27,7 +27,8 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.startControllerButton.clicked.connect(self.startController)
         self.stopCommsButton.clicked.connect(self.stopComms)
         self.clearDataButton.clicked.connect(self.clearData)
-        self.pushParamsButton.clicked.connect(self.pushParams)    
+        self.pushParamsButton.clicked.connect(self.pushParams)
+        self.sendSetPointButton.clicked.connect(self.pushSetpoint)
         self.timer = QTimer(self)
         # Set graph Button IDs
         self.plotSelector1ButtonGroup.setId(self.plotA, 1)
@@ -54,6 +55,10 @@ class Ui_MainWindowFull(Ui_MainWindow):
 
     def stopComms(self):
         self.comms.sendMessage("$R0%")
+    
+    def pushSetpoint(self):
+        val = self.setPointDoubleSpinBox.value()
+        self.comms.sendMessage(f"$S0,A{val}%")
 
     def yamlFileDialog(self):
         options = QFileDialog.Options()

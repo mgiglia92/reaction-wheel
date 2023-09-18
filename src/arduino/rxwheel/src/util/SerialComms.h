@@ -1,6 +1,7 @@
 #include <string.h>
 #include <Arduino.h>
 #include "util/pid-control.h"
+#include "util/structures.h"
 
 class SerialComms{
 public:
@@ -37,11 +38,13 @@ public:
     PID_control_config_t config2;
     PID_control_config_t config3;
     PID_control_config_t config4;
+    CmdVals_t cmdVals;
     bool calibration_start;
     int anti_windup_activated;
     int LPF;
     bool writeData;
     bool updateParams; //Flag to update values outside this class
+    bool updateController;
 };
 
 

@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="graphTab">
      <attribute name="title">
@@ -66,7 +66,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>ax</string>
+       <string>Setpoint</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -85,7 +85,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>az</string>
+       <string>Theta Sat</string>
       </property>
       <attribute name="buttonGroup">
        <string notr="true">plotSelector1ButtonGroup</string>
@@ -329,7 +329,7 @@
        <number>10000</number>
       </property>
       <property name="value">
-       <number>1</number>
+       <number>0</number>
       </property>
      </widget>
      <widget class="QPushButton" name="clearDataButton">
@@ -356,6 +356,51 @@
       </property>
       <property name="text">
        <string>Start Controller</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="setPointDoubleSpinBox">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>370</y>
+        <width>131</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <double>-20.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>20.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>350</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Setpoint</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="sendSetPointButton">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>400</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Send Set Point</string>
       </property>
      </widget>
     </widget>

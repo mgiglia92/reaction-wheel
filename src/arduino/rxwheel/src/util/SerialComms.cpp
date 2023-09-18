@@ -9,8 +9,8 @@ SerialComms::SerialComms(){
     //Variable that get used externally, set via the command protocol
     setpoint = 0;
     mode = 0;
-    startTest=false;
-    runController=false;
+    cmdVals.startTest=false;
+    cmdVals.runController=false;
     activate = false;
     calibration_start = false;
     LPF=0;
@@ -34,19 +34,22 @@ void SerialComms::processCommand(char* cmd_string){
     cmd = parseNumberInt(cmd_string, 'R', -1);
     switch((int)(cmd)){
         case 0: //Deactivate control and comms
-            startTest = false;
-            runController = false;
+            cmdVals.startTest = false;
+            cmdVals.runController = false;
             writeData=false;
+            updateParams = true;
             break;
         case 1: //Activate test
-            startTest = true;
-            runController = false;
+            cmdVals.startTest = true;
+            cmdVals.runController = false;
             writeData=true;
+            updateParams = true;
             break;
         case 2: //Activate feedback control
-            runController = true;
-            startTest = false;
+            cmdVals.runController = true;
+            cmdVals.startTest = false;
             writeData =true;
+            updateParams = true;
             break;
 
         //If no matches, break
@@ -57,9 +60,13 @@ void SerialComms::processCommand(char* cmd_string){
     cmd = parseNumberInt(cmd_string, 'S', -1);
     switch(int(cmd)){
         case 0: //Set angle set point
+            cmdVals.thetaSetpoint = parseNumberDouble(cmd_string, 'A', 0);
+            updateParams = true;
             break;
 
         case 1://Set ang vel set point
+            cmdVals.thetaDotSetpoint = parseNumberDouble(cmd_string, 'A', 0);
+            updateParams = true;
             break;
 
         default: break;
@@ -80,23 +87,23 @@ void SerialComms::processCommand(char* cmd_string){
 
         case 0:
             getControllerVals(cmd_string, &config0);
-            updateParams=true;
+            updateController=true;
             break;
         case 1:
             getControllerVals(cmd_string, &config1);
-            updateParams=true;
+            updateController=true;
             break;
         case 2:
             getControllerVals(cmd_string, &config2);
-            updateParams=true;
+            updateController=true;
             break;
         case 3:
             getControllerVals(cmd_string, &config3);
-            updateParams=true;
+            updateController=true;
             break;
         case 4:
             getControllerVals(cmd_string, &config4);
-            updateParams=true;
+            updateController=true;
             break;
         default: break;
     }
