@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 # matplotlib.use("QtAgg")
 
-file = open('data/prop-data.csv', 'r')
+file = open('data/old-data/prop-data.csv', 'r')
 rawdata = np.genfromtxt(file, delimiter=',', skip_header=2)
 print(rawdata)
 

@@ -10,7 +10,7 @@ import scipy.signal as signal
 
 
 Wn1 = 5
-Wn2 = 10
+Wn2 = 1
 sos = signal.butter(N=1, Wn=Wn1, output='sos', fs=100)
 sos2 = signal.butter(N=1, Wn=Wn2, output='sos', fs=100)
 
@@ -62,8 +62,8 @@ asatnof = np.gradient(wsatnof, time) # Sat ang acc with no friction
     
 
 plt.figure(0)
-plt.plot(time, wwefilt, 'r:', markersize=3,label=f'Ang Vel Wheel (Inertial Frame, bw={Wn1}Hz)')
-plt.plot(time, wsatfilt, 'b:', label=f'Ang Vel Sat (Inertial Frame, bw={Wn1}Hz)')
+plt.plot(time, wwefilt, 'r:', markersize=3,label=f'Ang Vel Wheel (Inertial Frame, lpf bw={Wn1}Hz)')
+plt.plot(time, wsatfilt, 'b:', label=f'Ang Vel Sat (Inertial Frame, lpf bw={Wn1}Hz)')
 plt.plot(time, wwenof, 'r',label=f'Ang Vel Wheel (Inertial Frame, no fric)')
 plt.plot(time, wsatnof, 'b', label=f'Ang Vel Sat (Inertial Frame, no fric)')
 # plt.plot(time, wnof, 'c', label='Omega no Fric')

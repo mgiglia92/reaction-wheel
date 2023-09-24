@@ -13,6 +13,7 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QFileDialog
 from util.data_util import DataFormat
 from util.parameters_util import ParameterConverter
+import traceback
 
 class Ui_MainWindowFull(Ui_MainWindow):
     def setup(self):
@@ -164,10 +165,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindowFull):
         self.setup()
 
 def main():
-    app = QtWidgets.QApplication(sys.argv)
+    try:
+        app = QtWidgets.QApplication(sys.argv)
+    except:
+        traceback.print_exception()
     main = MainWindow()
     main.show()
-    sys.exit(app.exec_())
+    ret = app.exec_()
+    sys.exit(ret)
 
 if __name__ == '__main__':
     main()
