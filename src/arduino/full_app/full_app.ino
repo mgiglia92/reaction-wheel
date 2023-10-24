@@ -111,7 +111,7 @@ void loop() {
       c1.setpointReset(0, 0);
     }
 
-            comms.sendData((cur - prev) / 1000000.0, cmdVals.thetaSetpoint, thetaSat, imu.getAngVelY(), count);
+            comms.sendData((cur - prev) / 1000000.0, cmdVals.thetaSetpoint, thetaSat, imu.getAngVelY(), wwheelActual);
 //    comms.sendData((cur - prev) / 1000000.0, cmdVals.thetaSetpoint, cmdVals.runController, cmdVals.startTest, cmdVals.thetaDotSetpoint);
 
     prev = cur;
