@@ -30,6 +30,7 @@ void SerialComms::processCommand(char* cmd_string){
         default: break;
     }
 
+    //TODO: Add R3, send data, no controls, no test
     //Request start stop
     cmd = parseNumberInt(cmd_string, 'R', -1);
     switch((int)(cmd)){
@@ -40,7 +41,9 @@ void SerialComms::processCommand(char* cmd_string){
             updateParams = true;
             break;
         case 1: //Activate test
-            cmdVals.startTest = true;
+            cmdVals.startTest = false;
+            //TODO: Undo this, edit for showcase
+            // cmdVals.startTest = true;
             cmdVals.runController = false;
             writeData=true;
             updateParams = true;
