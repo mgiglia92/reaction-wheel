@@ -4,17 +4,17 @@ import csv
 class DataFormat:
     def __init__(self):
         pass
-        self.time = np.empty((0),dtype=np.float32)
-        self.ax = np.empty((0),dtype=np.float32)
-        self.az = np.empty((0),dtype=np.float32)
-        self.wy = np.empty((0),dtype=np.float32)
-        self.power = np.empty((0), dtype=np.float32)
+        self.time               = np.empty((0),dtype=np.float32)
+        self.theta_desired      = np.empty((0),dtype=np.float32)
+        self.theta_actual       = np.empty((0),dtype=np.float32)
+        self.omega_actual_sat   = np.empty((0),dtype=np.float32)
+        self.omega_actual_wheel = np.empty((0), dtype=np.float32)
         self.index=0
     def append(self, data):
-        self.time = np.append(self.time, data[0])
-        self.ax = np.append(self.ax, data[1])
-        self.az = np.append(self.az, data[2])
-        self.wy = np.append(self.wy, data[3])
-        self.power = np.append(self.power, data[4])
+        self.time               = np.append(self.time, data[0])
+        self.theta_desired      = np.append(self.theta_desired, data[1])
+        self.theta_actual       = np.append(self.theta_actual, data[2])
+        self.omega_actual_sat   = np.append(self.omega_actual_sat, data[3])
+        self.omega_actual_wheel = np.append(self.omega_actual_wheel, data[4])
     def tocsv(self):
         pass

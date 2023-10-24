@@ -82,7 +82,7 @@ class Ui_MainWindowFull(Ui_MainWindow):
 
             maxpoints = self.numDataPointsSpinBox.value()
             startpoint = self.startDataPointSpinBox.value()
-            length = len(self.comms.data.ax)
+            length = len(self.comms.data.time)
             numpoints = min(maxpoints, length-startpoint)
 
             # Check what to plot
@@ -92,26 +92,26 @@ class Ui_MainWindowFull(Ui_MainWindow):
                 self.plot2[i] = b.isChecked()
 
             if self.plot1[0]:
-                self.graphWidget.plot(self.comms.data.ax[-1*numpoints:-1])
-            if self.plot1[1]:
-                self.graphWidget.plot(self.comms.data.az[-1*numpoints:-1])
-            if self.plot1[2]:
-                self.graphWidget.plot(self.comms.data.wy[-1*numpoints:-1])
-            if self.plot1[3]:
                 self.graphWidget.plot(self.comms.data.time[-1*numpoints:-1])
+            if self.plot1[1]:
+                self.graphWidget.plot(self.comms.data.theta_desired[-1*numpoints:-1])
+            if self.plot1[2]:
+                self.graphWidget.plot(self.comms.data.theta_actual[-1*numpoints:-1])
+            if self.plot1[3]:
+                self.graphWidget.plot(self.comms.data.omega_actual_sat[-1*numpoints:-1])
             if self.plot1[4]:
-                self.graphWidget.plot(self.comms.data.power[-1*numpoints:-1])            
+                self.graphWidget.plot(self.comms.data.omega_actual_wheel[-1*numpoints:-1])            
 
-            if self.plot2[0]:
-                self.graphWidget_2.plot(self.comms.data.ax[-1*numpoints:-1])
             if self.plot2[1]:
-              self.graphWidget_2.plot(self.comms.data.az[-1*numpoints:-1])
+                self.graphWidget_2.plot(self.comms.data.time[-1*numpoints:-1])
             if self.plot2[2]:
-              self.graphWidget_2.plot(self.comms.data.wy[-1*numpoints:-1])
-            if self.plot2[3]:
-              self.graphWidget_2.plot(self.comms.data.time[-1*numpoints:-1])
+              self.graphWidget_2.plot(self.comms.data.theta_desired[-1*numpoints:-1])
             if self.plot2[4]:
-                self.graphWidget_2.plot(self.comms.data.power[-1*numpoints:-1])
+              self.graphWidget_2.plot(self.comms.data.theta_actual[-1*numpoints:-1])
+            if self.plot2[0]:
+              self.graphWidget_2.plot(self.comms.data.omega_actual_sat[-1*numpoints:-1])
+            if self.plot2[3]:
+                self.graphWidget_2.plot(self.comms.data.omega_actual_wheel[-1*numpoints:-1])
             
         except:
             pass
