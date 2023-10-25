@@ -217,11 +217,11 @@ void SerialComms::sendData(double a, double b, double c, double d, double e) {
     {
         Serial.print('$'); //Start of message char
         Serial.print('Z'); Serial.print(0); Serial.print(',');
-        Serial.print('A'); Serial.print(a,6); Serial.print(',');
-        Serial.print('B'); Serial.print(b,2); Serial.print(',');
-        Serial.print('C'); Serial.print(c,2); Serial.print(',');
-        Serial.print('D'); Serial.print(d,2); Serial.print(',');
-        Serial.print('E'); Serial.print(e,2);
+        Serial.print('A'); Serial.print(a,3); Serial.print(',');
+        Serial.print('B'); Serial.print(b,3); Serial.print(',');
+        Serial.print('C'); Serial.print(c,3); Serial.print(',');
+        Serial.print('D'); Serial.print(d,3); Serial.print(',');
+        Serial.print('E'); Serial.print(e,3);
         Serial.print('%'); //End of message character
         // Serial.println('\0');
     }
