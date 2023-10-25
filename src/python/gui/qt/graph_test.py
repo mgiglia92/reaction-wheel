@@ -8,12 +8,13 @@ from gui.qt.ui import Ui_MainWindow
 import io
 from ruamel.yaml import YAML
 yaml = YAML()
-from threading import Thread
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QFileDialog
 from util.data_util import DataFormat
 from util.parameters_util import ParameterConverter
 import traceback
+import numpy as np
+from time import time_ns, sleep
 
 class Ui_MainWindowFull(Ui_MainWindow):
     def setup(self):
@@ -44,6 +45,18 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.plotSelector2ButtonGroup.setId(self.plotE_2, 5)
         self.plot1 = [False]*5
         self.plot2 = [False]*5
+        #TODO: Make a damn plotting library already dude
+        # Plot colors (I know why they here bro)
+        red     = pg.mkPen(pg.hsvColor(hue=0.0,   sat=0.8,      val=0.8,      alpha=0.5), width=2)
+        blue    = pg.mkPen(pg.hsvColor(hue=0.2,   sat=0.8,      val=0.8,      alpha=0.5), width=2)
+        green   = pg.mkPen(pg.hsvColor(hue=0.4,   sat=0.8,      val=0.8,      alpha=0.5), width=2)
+        color4  = pg.mkPen(pg.hsvColor(hue=0.6,   sat=0.8,      val=0.8,      alpha=0.5), width=2)
+        color5  = pg.mkPen(pg.hsvColor(hue=0.8,   sat=0.8,      val=0.8,      alpha=0.5), width=2)
+        self.colors=[red, green, blue, color4, color5]
+
+        # AUto set point for showcase
+        self.setPointTimer = QTimer(self)
+        self.setPointTimer.timeout.connect(self.autoSetPoint)
 
     def clearData(self):
         self.comms.data = DataFormat()
@@ -58,8 +71,17 @@ class Ui_MainWindowFull(Ui_MainWindow):
         self.comms.sendMessage("$R0%")
     
     def pushSetpoint(self):
-        val = self.setPointDoubleSpinBox.value()
-        self.comms.sendMessage(f"$S0,A{val}%")
+        # TODO: Add a button to do this, uncomment the pushing setpoint
+        # Toggle auto setpoint sender
+        self.setPointTimer.start(100)
+
+        # val = self.setPointDoubleSpinBox.value()
+        # self.comms.sendMessage(f"$S0,A{val}%")
+
+    def autoSetPoint(self):
+        val = np.sin(2*np.pi*0.2*float(time_ns()/1000000000.0))
+        self.comms.sendMessage(f"$S0,A{val:.2f}%")
+        self.setPointTimer.start(20)
 
     def yamlFileDialog(self):
         options = QFileDialog.Options()
@@ -91,31 +113,33 @@ class Ui_MainWindowFull(Ui_MainWindow):
             for i,b in enumerate(self.plotSelector2ButtonGroup.buttons()):
                 self.plot2[i] = b.isChecked()
 
-            if self.plot1[0]:
-                self.graphWidget.plot(self.comms.data.time[-1*numpoints:-1])
+            self.graphWidget.addLegend()
+            if self.plot1[0]: 
+                self.graphWidget.plot(self.comms.data.time[-1*numpoints:-1],                pen=self.colors[0],     name="Ts")
             if self.plot1[1]:
-                self.graphWidget.plot(self.comms.data.theta_desired[-1*numpoints:-1])
+                self.graphWidget.plot(self.comms.data.theta_desired[-1*numpoints:-1],       pen=self.colors[1],     name="Theta Desired")
             if self.plot1[2]:
-                self.graphWidget.plot(self.comms.data.theta_actual[-1*numpoints:-1])
+                self.graphWidget.plot(self.comms.data.theta_actual[-1*numpoints:-1],        pen=self.colors[2],     name="Theta Actual")
             if self.plot1[3]:
-                self.graphWidget.plot(self.comms.data.omega_actual_sat[-1*numpoints:-1])
+                self.graphWidget.plot(self.comms.data.omega_actual_sat[-1*numpoints:-1],    pen=self.colors[3],     name="Omega_Actual_Satellite")
             if self.plot1[4]:
-                self.graphWidget.plot(self.comms.data.omega_actual_wheel[-1*numpoints:-1])            
+                self.graphWidget.plot(self.comms.data.omega_actual_wheel[-1*numpoints:-1],  pen=self.colors[4],     name="Omega_Actual_RxWheel")            
 
+            self.graphWidget.addLegend()
             if self.plot2[1]:
-                self.graphWidget_2.plot(self.comms.data.time[-1*numpoints:-1])
+                self.graphWidget_2.plot(self.comms.data.time[-1*numpoints:-1],                  pen=self.colors[0],     name="Ts")
             if self.plot2[2]:
-              self.graphWidget_2.plot(self.comms.data.theta_desired[-1*numpoints:-1])
+              self.graphWidget_2.plot(self.comms.data.theta_desired[-1*numpoints:-1],           pen=self.colors[1],     name="Theta Desired")
             if self.plot2[4]:
-              self.graphWidget_2.plot(self.comms.data.theta_actual[-1*numpoints:-1])
+              self.graphWidget_2.plot(self.comms.data.theta_actual[-1*numpoints:-1],            pen=self.colors[2],     name="Theta Actual")
             if self.plot2[0]:
-              self.graphWidget_2.plot(self.comms.data.omega_actual_sat[-1*numpoints:-1])
+              self.graphWidget_2.plot(self.comms.data.omega_actual_sat[-1*numpoints:-1],        pen=self.colors[3],     name="Omega_Actual_Satellite")
             if self.plot2[3]:
-                self.graphWidget_2.plot(self.comms.data.omega_actual_wheel[-1*numpoints:-1])
+                self.graphWidget_2.plot(self.comms.data.omega_actual_wheel[-1*numpoints:-1],    pen=self.colors[4],     name="Omega_Actual_RxWheel")
             
         except:
             pass
-        self.timer.start(100)
+        self.timer.start(20)
 
 
     def arduinoConnect(self, port):
