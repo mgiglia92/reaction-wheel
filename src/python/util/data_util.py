@@ -11,6 +11,8 @@ class DataFormat:
         self.omega_actual_wheel = np.empty((0), dtype=np.float32)
         self.index=0
     def append(self, data):
+        if(len(self.time) >= 10000):
+            self.__init__()
         self.time               = np.append(self.time, data[0])
         self.theta_desired      = np.append(self.theta_desired, data[1])
         self.theta_actual       = np.append(self.theta_actual, data[2])
